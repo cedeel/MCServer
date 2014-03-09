@@ -96,26 +96,6 @@ void cIncrementalRedstoneSimulator::RedstoneAddBlock(int a_BlockX, int a_BlockY,
 			PoweredBlocks->erase(itr);
 			break;
 		}
-		else if (Block == E_BLOCK_DAYLIGHT_SENSOR)
-		{
-			if (!a_Chunk->IsLightValid())
-			{
-				m_World.QueueLightChunk(a_Chunk->GetPosX(), a_Chunk->GetPosZ());
-				break;
-			}
-			else
-			{
-				NIBBLETYPE SkyLight;
-				a_Chunk->UnboundedRelGetBlockSkyLight(RelX, itr->a_SourcePos.y + 1, RelZ, SkyLight);
-
-				if (a_Chunk->GetTimeAlteredLight(SkyLight) <= 8) // Could use SkyLight - m_World.GetSkyDarkness();
-				{
-					LOGD("cIncrementalRedstoneSimulator: Erased daylight sensor from powered blocks list due to insufficient light level");
-					PoweredBlocks->erase(itr);
-					break;
-				}
-			}
-		}
 	}
 
 	LinkedBlocksList * LinkedPoweredBlocks = a_Chunk->GetRedstoneSimulatorLinkedBlocksList();
