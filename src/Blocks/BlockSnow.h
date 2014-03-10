@@ -67,18 +67,6 @@ public:
 
 	virtual bool CanBeAt(cChunkInterface & a_ChunkInterface, int a_RelX, int a_RelY, int a_RelZ, const cChunk & a_Chunk) override
 	{
-		if (!a_Chunk.IsLightValid())
-		{
-			a_Chunk.GetWorld()->QueueLightChunk(a_Chunk.GetPosX(), a_Chunk.GetPosZ());
-		}
-		else
-		{
-			if (a_Chunk.GetBlockLight(a_RelX, a_RelY, a_RelZ) > 11)
-			{
-				return false;
-			}
-		}
-
 		if (a_RelY > 0)
 		{
 			BLOCKTYPE BlockBelow = a_Chunk.GetBlock(a_RelX, a_RelY - 1, a_RelZ);
@@ -92,6 +80,22 @@ public:
 		}
 		
 		return false;
+	}
+
+
+	virtual void OnUpdate(cChunkInterface & a_ChunkInterface, cWorldInterface & a_WorldInterface, cBlockPluginInterface & a_BlockPluginInterface, cChunk & a_Chunk, int a_RelX, int a_RelY, int a_RelZ) override
+	{
+		if (!a_Chunk.IsLightValid())
+		{
+			a_Chunk.GetWorld()->QueueLightChunk(a_Chunk.GetPosX(), a_Chunk.GetPosZ());
+		}
+		else
+		{
+			if (a_Chunk.GetBlockLight(a_RelX, a_RelY, a_RelZ) > 11)
+			{
+				a_Chunk.SetBlock(a_RelX, a_RelY, a_RelZ, E_BLOCK_AIR, 0);
+			}
+		}
 	}
 	
 	
